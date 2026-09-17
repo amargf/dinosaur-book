@@ -3,16 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>موسوعة الديناصورات التفاعلية</title>
+    <title>كتاب الديناصورات التفاعلي</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- الحاوية الرئيسية للكتاب -->
     <div class="book-container" id="book">
-        
-        <!-- الغلاف الرئيسي (الصفحة 0) -->
-        <div class="page cover-page" id="page-0" style="z-index: 9999;">
+        <!-- الغلاف الرئيسي (صفحة 0) -->
+        <div class="page cover-page" id="page-0">
             <div class="cover-border">
                 <div class="badge">موسوعة ما قبل التاريخ</div>
                 <div class="title-box">
@@ -27,17 +25,16 @@
                 <div class="note">طبعة خاصة وشاملة</div>
             </div>
         </div>
-
     </div>
 
-    <!-- أزرار التنقل -->
+    <!-- أزرار التحكم -->
     <div class="controls">
         <button class="btn" id="prevBtn" onclick="prevPage()" disabled>السابقة</button>
         <span id="indicator" style="color: #fff; font-weight: bold;">1 / 1</span>
         <button class="btn" id="nextBtn" onclick="nextPage()">التالية</button>
     </div>
 
-    <!-- المحرك الرئيسي فقط -->
+    <!-- السكربت الرئيسي الذي يقرأ الصفحات تلقائياً -->
     <script src="script.js"></script>
 </body>
 </html>

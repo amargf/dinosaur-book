@@ -1,7 +1,4 @@
-// التأكد من وجود المصفوفة العامة
 window.pagesData = window.pagesData || [];
-
-// إضافة بيانات الصفحة 2: أبريكتوصور
 window.pagesData.push({
     id: 2,
     nameAr: "أبريكتوصور",

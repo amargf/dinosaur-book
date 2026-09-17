@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>موسوعة الديناصورات التفاعلية</title>
+    <!-- ربط ملف التصميم والتنسيقات -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- الحاوية الرئيسية للكتاب -->
+    <div class="book-container" id="book">
+        
+        <!-- الغلاف الرئيسي (الصفحة 0) -->
+        <div class="page cover-page" id="page-0" style="z-index: 1000;">
+            <div class="cover-border">
+                <div class="badge">موسوعة ما قبل التاريخ</div>
+                <div class="title-box">
+                    <h1 class="title">معلومات عن<br>الديناصورات</h1>
+                    <div class="subtitle">دليل شامل لأعظم كائنات الأرض</div>
+                </div>
+                <div class="divider"></div>
+                <div class="icon-container">
+                    <span class="dino-icon">🦖</span>
+                </div>
+                <div class="divider"></div>
+                <div class="note">طبعة خاصة وشاملة (100 ديناصور)</div>
+            </div>
+        </div>
+
+        <!-- سيقوم السكربت بتوليد الصفحات المتبقية هنا تلقائياً -->
+
+    </div>
+
+    <!-- أزرار التنقل بين الصفحات -->
+    <div class="controls">
+        <button class="btn" id="prevBtn" onclick="prevPage()" disabled>السابقة</button>
+        <span id="indicator" style="color: #fff; font-weight: bold;">1 / 1</span>
+        <button class="btn" id="nextBtn" onclick="nextPage()">التالية</button>
+    </div>
+
+    <!-- 1. استدعاء ملفات الصفحات من مجلد pages (تضيف السطر الخاص بـ page2.js وما بعدها هنا تدريجياً) -->
+    <script src="pages/page1.js"></script>
+
+    <!-- 2. استدعاء الملف البرمجي الرئيسي للتشغيل والتقليب (يجب أن يكون في النهاية) -->
+    <script src="script.js"></script>
+</body>
+</html>

@@ -3,36 +3,34 @@ window.pagesData = window.pagesData || [];
 const bookContainer = document.getElementById('book');
 let currentPage = 0;
 
-// 1. جلب الملفات بذكاء (يتوقف تلقائياً عندما ينتهي وجود الملفات)
 async function loadAllPages() {
-    let i = 1;
-    let keepLoading = true;
+    let pageNum = 1;
+    let keepChecking = true;
 
-    while (keepLoading && i <= 100) { // الحد الأقصى 100 صفحة
+    while (keepChecking && pageNum <= 500) {
         try {
-            await new Promise((resolve, reject) => {
-                const script = document.createElement('script');
-                // إضافة رقم عشوائي صغير لمنع مشكلة التخزين المؤقت Cache في المتصفح
-                script.src = `pages/page${i}.js?v=` + Date.now();
-                
-                script.onload = () => resolve(true);
-                script.onerror = () => reject(false);
-                
-                document.body.appendChild(script);
-            });
-            i++;
-        } catch (error) {
-            // إذا وصلنا لملف غير موجود (مثل page3.js)، نتوقف عن البحث بأمان
-            keepLoading = false;
+            const response = await fetch(`pages/page${pageNum}.js`);
+            if (response.ok) {
+                await new Promise((resolve, reject) => {
+                    const script = document.createElement('script');
+                    script.src = `pages/page${pageNum}.js?v=` + Date.now();
+                    script.onload = resolve;
+                    script.onerror = reject;
+                    document.body.appendChild(script);
+                });
+                pageNum++;
+            } else {
+                keepChecking = false;
+            }
+        } catch (e) {
+            keepChecking = false;
         }
     }
-    
-    // بعد الانتهاء من تحميل الملفات الموجودة فعلياً، نبني الكتاب
-    renderPages();
+
+    initBook();
 }
 
-// 2. بناء الصفحات داخل الـ DOM
-function renderPages() {
+function initBook() {
     window.pagesData.sort((a, b) => a.id - b.id);
 
     window.pagesData.forEach((dino) => {
@@ -67,7 +65,6 @@ function renderPages() {
     updateBook();
 }
 
-// 3. تحديث حركة التقليب والعدّاد
 function updateBook() {
     const totalPages = window.pagesData.length + 1;
 
@@ -109,5 +106,4 @@ window.prevPage = function() {
     }
 };
 
-// بدء التحميل
 loadAllPages();

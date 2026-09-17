@@ -16,7 +16,6 @@ html, body {
     align-items: center;
 }
 
-/* الحاوية الرئيسية للكتاب */
 .book-container {
     width: 100%;
     height: calc(100vh - 60px);
@@ -24,7 +23,6 @@ html, body {
     perspective: 2000px;
 }
 
-/* الهيكل العام للصفحات */
 .page {
     width: 100%;
     height: 100%;
@@ -46,12 +44,11 @@ html, body {
     pointer-events: none;
 }
 
-/* ==========================================
-   ✨ تصميم الغلاف الجميل (Cover Styling)
-   ========================================== */
+/* الغلاف */
 .cover-page {
     background: linear-gradient(135deg, #0d1410 0%, #1a261f 50%, #0a0f0c 100%);
     padding: 15px;
+    z-index: 10000;
 }
 
 .cover-border {
@@ -59,14 +56,13 @@ html, body {
     height: 100%;
     width: 100%;
     border-radius: 6px;
-    padding: 20px 15px;
+    padding: 15px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
     text-align: center;
-    background: rgba(0, 0, 0, 0.25);
-    box-shadow: inset 0 0 15px rgba(212, 175, 55, 0.15);
+    background: rgba(0, 0, 0, 0.2);
 }
 
 .badge {
@@ -75,54 +71,52 @@ html, body {
     letter-spacing: 1.5px;
     border: 1px solid #d4af37;
     padding: 4px 16px;
-    background: rgba(212, 175, 55, 0.08);
-    border-radius: 4px;
+    background: rgba(212, 175, 55, 0.05);
 }
+
+.title-box { margin: 10px 0; }
 
 h1.title {
     color: #f3e5ab;
-    font-size: clamp(2rem, 6vh, 3.5rem);
-    line-height: 1.25;
+    font-size: clamp(2rem, 6vh, 3.8rem);
+    line-height: 1.2;
+    font-weight: 800;
     text-shadow: 2px 4px 10px rgba(0, 0, 0, 0.9);
-    margin-bottom: 5px;
+    margin-bottom: 10px;
 }
 
 .subtitle {
     color: #a3b899;
-    font-size: clamp(0.95rem, 2.5vh, 1.3rem);
+    font-size: clamp(1rem, 3vh, 1.4rem);
 }
 
 .icon-container {
-    width: clamp(110px, 18vh, 200px);
-    height: clamp(110px, 18vh, 200px);
+    width: clamp(120px, 20vh, 220px);
+    height: clamp(120px, 20vh, 220px);
     border-radius: 50%;
     border: 1px dashed rgba(212, 175, 55, 0.6);
     display: flex;
     justify-content: center;
     align-items: center;
     background: rgba(0, 0, 0, 0.4);
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
+    margin: 10px 0;
 }
 
-.dino-icon { 
-    font-size: clamp(3.5rem, 10vh, 6rem); 
-}
+.dino-icon { font-size: clamp(4rem, 12vh, 7rem); }
 
 .divider {
-    width: 65%;
+    width: 60%;
     height: 2px;
     background: linear-gradient(to right, transparent, #d4af37, transparent);
+    margin: 5px 0;
 }
 
 .note {
-    font-size: clamp(0.85rem, 2vh, 1rem);
+    font-size: clamp(0.85rem, 2.2vh, 1.1rem);
     color: #d4af37;
-    font-weight: 500;
 }
 
-/* ==========================================
-   📄 تصميم الصفحات الداخلية (Inner Pages)
-   ========================================== */
+/* الصفحات الداخلية */
 .inner-page {
     background-color: #fcf8ed;
     color: #2c221e;
@@ -150,12 +144,14 @@ h1.title {
 }
 
 .page-content {
-    font-size: clamp(0.95rem, 2.2vh, 1.15rem);
+    font-size: clamp(0.95rem, 2.2vh, 1.2rem);
     line-height: 1.7;
     text-align: justify;
     flex-grow: 1;
     overflow-y: auto;
+    padding: 0 5px;
     scrollbar-width: none;
+    -ms-overflow-style: none;
 }
 
 .page-content::-webkit-scrollbar { display: none; }
@@ -163,8 +159,9 @@ h1.title {
 .section-title {
     color: #8c2d19;
     font-weight: bold;
-    font-size: clamp(1rem, 2.3vh, 1.2rem);
+    font-size: clamp(1.05rem, 2.5vh, 1.3rem);
     margin-top: 12px;
+    margin-bottom: 4px;
     border-bottom: 1px dashed #d4af37;
     display: inline-block;
 }
@@ -172,7 +169,6 @@ h1.title {
 .info-list {
     list-style: none;
     padding-right: 0;
-    margin-top: 5px;
 }
 
 .info-list li {
@@ -195,11 +191,10 @@ h1.title {
     color: #777;
     border-top: 1px solid #ddd;
     padding-top: 6px;
+    margin-top: 8px;
 }
 
-/* ==========================================
-   🎛️ أزرار التحكم (Controls)
-   ========================================== */
+/* شريط التحكم */
 .controls {
     height: 50px;
     display: flex;
@@ -212,16 +207,20 @@ h1.title {
     background: #d4af37;
     color: #0b0f0d;
     border: none;
-    padding: 8px 22px;
+    padding: 10px 25px;
     font-size: 1rem;
     font-weight: bold;
     border-radius: 20px;
     cursor: pointer;
     transition: 0.3s;
+    box-shadow: 0 4px 10px rgba(212, 175, 55, 0.3);
 }
+
+.btn:hover { background: #f3e5ab; }
 
 .btn:disabled {
     background: #333;
     color: #666;
     cursor: not-allowed;
+    box-shadow: none;
 }

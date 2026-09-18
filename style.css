@@ -19,6 +19,7 @@
 
 html, body {
     height: 100vh;
+    height: 100dvh;
     overflow: hidden;
 }
 
@@ -192,8 +193,11 @@ body {
     width: 100%;
     max-width: 100%;
     padding: 0.8rem 1.2rem;
+    padding-bottom: calc(0.8rem + env(safe-area-inset-bottom, 20px));
     height: 100vh;
+    height: 100dvh;
     max-height: 100vh;
+    max-height: 100dvh;
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -786,6 +790,7 @@ body {
 @media (max-width: 600px) {
     .book-container {
         padding: 0.6rem;
+        padding-bottom: calc(1.5rem + env(safe-area-inset-bottom, 30px));
     }
 
     .page {
@@ -802,7 +807,8 @@ body {
 
     .nav-controls {
         gap: 0.8rem;
-        margin-top: 0.6rem;
+        margin-top: 0.8rem;
+        padding-bottom: 0.5rem;
     }
 
     .nav-btn {

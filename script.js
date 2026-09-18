@@ -1,109 +1,107 @@
-window.pagesData = window.pagesData || [];
+// إدارة تحميل وعرض صفحات موسوعة الديناصورات (27 صفحة)
+document.addEventListener("DOMContentLoaded", async () => {
+    const totalPages = 27;
+    window.pagesData = window.pagesData || [];
 
-const bookContainer = document.getElementById('book');
-let currentPage = 0;
-
-async function loadAllPages() {
-    let pageNum = 1;
-    let keepChecking = true;
-
-    while (keepChecking && pageNum <= 500) {
-        try {
-            const response = await fetch(`pages/page${pageNum}.js`);
-            if (response.ok) {
-                await new Promise((resolve, reject) => {
-                    const script = document.createElement('script');
-                    script.src = `pages/page${pageNum}.js?v=` + Date.now();
-                    script.onload = resolve;
-                    script.onerror = reject;
-                    document.body.appendChild(script);
-                });
-                pageNum++;
-            } else {
-                keepChecking = false;
+    // دالة مساعدة لتحميل ملفات الصفحات ديناميكياً من المجلد pages/
+    function loadScript(src) {
+        return new Promise((resolve, reject) => {
+            // التحقق مما إذا كان الملف محمل مسبقاً لمنع التكرار
+            if (document.querySelector(`script[src="${src}"]`)) {
+                resolve();
+                return;
             }
+            const script = document.createElement('script');
+            script.src = src;
+            script.onload = resolve;
+            script.onerror = reject;
+            document.head.appendChild(script);
+        });
+    }
+
+    // تحميل جميع الصفحات من page1.js إلى page27.js تلقائياً
+    for (let i = 1; i <= totalPages; i++) {
+        try {
+            await loadScript(`pages/page${i}.js`);
         } catch (e) {
-            keepChecking = false;
+            console.warn(`تعذر تحميل الملف: pages/page${i}.js`);
         }
     }
 
-    initBook();
-}
+    let currentPage = 1;
 
-function initBook() {
-    window.pagesData.sort((a, b) => a.id - b.id);
-
-    window.pagesData.forEach((dino) => {
-        const pageDiv = document.createElement('div');
-        pageDiv.className = 'page inner-page';
-        pageDiv.id = `page-${dino.id}`;
-        pageDiv.style.zIndex = 9000 - dino.id;
-
-        pageDiv.innerHTML = `
-            <div class="page-header">
-                <h2>${dino.nameAr}</h2>
-                <span>${dino.nameEn}</span>
-            </div>
-            <div class="page-content">
-                <p>${dino.desc}</p>
-                <div class="section-title">التسمية والاكتشاف</div>
-                <ul class="info-list">
-                    <li><strong>معنى الاسم:</strong> ${dino.meaning}</li>
-                </ul>
-                <div class="section-title">الحجم والخصائص</div>
-                <ul class="info-list">
-                    <li><strong>الطول والوزن:</strong> ${dino.length} ، ${dino.weight}</li>
-                </ul>
-                ${dino.details ? dino.details : ''}
-            </div>
-            <div class="page-footer">صفحة ${dino.id}</div>
-        `;
-
-        bookContainer.appendChild(pageDiv);
-    });
-
-    updateBook();
-}
-
-function updateBook() {
-    const totalPages = window.pagesData.length + 1;
-
-    for (let i = 0; i < totalPages; i++) {
-        const page = document.getElementById(`page-${i}`);
-        if (page) {
-            page.classList.toggle('flipped', currentPage > i);
-        }
-    }
-
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
-    if (prevBtn) prevBtn.disabled = (currentPage === 0);
-    if (nextBtn) nextBtn.disabled = (currentPage === totalPages - 1);
+    // عناصر واجهة المستخدم
+    const prevBtn = document.getElementById('prev-btn') || document.querySelector('.prev-btn');
+    const nextBtn = document.getElementById('next-btn') || document.querySelector('.next-btn');
+    const pageIndicator = document.getElementById('page-indicator') || document.querySelector('.page-indicator');
     
-    updateIndicator();
-}
+    // البحث عن حاوية المحتوى بغض النظر عن اسم الكلاس أو الأيدي
+    const contentContainer = document.getElementById('content-container') || 
+                             document.querySelector('.content-container') || 
+                             document.querySelector('.book-content') ||
+                             document.querySelector('.page-content');
 
-function updateIndicator() {
-    const totalPages = window.pagesData.length + 1;
-    const indicator = document.getElementById('indicator');
-    if (indicator) {
-        indicator.innerText = `${currentPage + 1} / ${totalPages}`;
+    function renderPage(pageNum) {
+        if (!contentContainer) return;
+
+        // --- الحل الجذري للتداخل: تفريغ الحاوية تماماً قبل عرض بيانات الصفحة الجديدة ---
+        contentContainer.innerHTML = '';
+
+        // البحث عن بيانات الصفحة المطلوبة في المصفوفة
+        const pageData = window.pagesData.find(p => p.id === pageNum);
+
+        if (pageData) {
+            contentContainer.innerHTML = `
+                <div class="page-inner-content" style="width: 100%; box-sizing: border-box;">
+                    <h1 class="dino-title" style="text-align: center;">${pageData.nameAr || ''}</h1>
+                    <h2 class="dino-subtitle" style="text-align: center; margin-bottom: 15px;">${pageData.nameEn || ''}</h2>
+                    <p class="dino-desc" style="line-height: 1.7; margin-bottom: 15px;">${pageData.desc || ''}</p>
+                    
+                    <div class="section-title" style="font-weight: bold; color: #d4af37; margin-top: 15px; border-bottom: 1px solid #d4af37; padding-bottom: 3px;">المعنى والتسمية</div>
+                    <p style="line-height: 1.6; margin: 8px 0 15px 0;">${pageData.meaning || ''}</p>
+                    
+                    <div class="section-title" style="font-weight: bold; color: #d4af37; margin-top: 15px; border-bottom: 1px solid #d4af37; padding-bottom: 3px;">الحجم والخصائص</div>
+                    <ul class="info-list" style="margin: 8px 0 15px 20px; line-height: 1.6;">
+                        <li><strong>الطول:</strong> ${pageData.length || ''}</li>
+                        <li><strong>الوزن:</strong> ${pageData.weight || ''}</li>
+                    </ul>
+                    
+                    ${pageData.details || ''}
+                    
+                    <div class="page-number-footer" style="text-align: center; margin-top: 25px; font-size: 14px; opacity: 0.8;">صفحة ${pageData.id}</div>
+                </div>
+            `;
+        } else {
+            contentContainer.innerHTML = `<p style="text-align: center; padding: 20px;">جاري تحميل الصفحة رقم ${pageNum}...</p>`;
+        }
+
+        // تحديث عداد الصفحات في الأسفل (مثال: 27 / 1)
+        if (pageIndicator) {
+            pageIndicator.textContent = `${totalPages} / ${pageNum}`;
+        }
     }
-}
 
-window.nextPage = function() {
-    const totalPages = window.pagesData.length + 1;
-    if (currentPage < totalPages - 1) {
-        currentPage++;
-        updateBook();
+    // ربط أزرار التنقل (التالية والسابقة)
+    if (nextBtn) {
+        nextBtn.addEventListener('click', () => {
+            if (currentPage < totalPages) {
+                currentPage++;
+                renderPage(currentPage);
+            }
+        });
     }
-};
 
-window.prevPage = function() {
-    if (currentPage > 0) {
-        currentPage--;
-        updateBook();
+    if (prevBtn) {
+        prevBtn.addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage--;
+                renderPage(currentPage);
+            }
+        });
     }
-};
 
-loadAllPages();
+    // العرض الأولي للصفحة الأولى بعد ضمان تحميل السكريبتات
+    setTimeout(() => {
+        renderPage(currentPage);
+    }, 400);
+});

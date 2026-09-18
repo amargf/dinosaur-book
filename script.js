@@ -33,7 +33,7 @@
     const indexList = document.getElementById('index-list');
 
     // ===== بناء محتوى الصفحة =====
-    function buildPageContent(dino, index) {
+    function buildPageContent(dino) {
         return `
             <div class="dino-header">
                 <div class="dino-number">${dino.id}</div>
@@ -68,12 +68,18 @@
         `;
     }
 
+    // ===== تمرير الصفحة للأعلى فوراً =====
+    function scrollPagesToTop() {
+        if (pageRight) pageRight.scrollTop = 0;
+        if (pageLeft) pageLeft.scrollTop = 0;
+    }
+
     // ===== عرض صفحة معينة =====
-    function renderPage(index) {
+    function renderPage(index, scrollTop = true) {
         if (index < 0 || index >= totalPages) return;
 
         const dino = data[index];
-        const content = buildPageContent(dino, index);
+        const content = buildPageContent(dino);
 
         // عرض الصفحة اليمنى دائماً
         pageRightContent.innerHTML = content;
@@ -83,12 +89,12 @@
         const nextIndex = index + 1;
         if (nextIndex < totalPages) {
             const nextDino = data[nextIndex];
-            pageLeftContent.innerHTML = buildPageContent(nextDino, nextIndex);
+            pageLeftContent.innerHTML = buildPageContent(nextDino);
             pageLeftNum.textContent = nextDino.id;
             pageLeft.style.display = '';
         } else {
             pageLeftContent.innerHTML = `
-                <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;text-align:center;color:var(--accent);">
+                <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;text-align:center;color:var(--accent);padding:2rem;">
                     <div style="font-size:4rem;margin-bottom:1rem;">🦕</div>
                     <h3 style="font-family:'Amiri',serif;font-size:1.5rem;margin-bottom:0.5rem;">نهاية الموسوعة</h3>
                     <p style="opacity:0.7;">شكراً لتصفحك موسوعة الديناصورات</p>
@@ -108,9 +114,10 @@
         // تحديث الفهرس النشط
         updateActiveIndexItem(index);
 
-        // تمرير لأعلى الصفحة
-        pageRight.scrollTop = 0;
-        pageLeft.scrollTop = 0;
+        // تمرير لأعلى الصفحة فوراً
+        if (scrollTop) {
+            scrollPagesToTop();
+        }
     }
 
     // ===== الانتقال للصفحة التالية =====
@@ -118,15 +125,17 @@
         if (isAnimating || currentPage >= totalPages - 1) return;
         isAnimating = true;
 
+        scrollPagesToTop();
+
         // تأثير التقليب
         pageRight.classList.add('flipping-right');
         setTimeout(() => {
             pageRight.classList.remove('flipping-right');
+            isAnimating = false;
         }, 600);
 
         currentPage++;
-        renderPage(currentPage);
-        isAnimating = false;
+        renderPage(currentPage, true);
     }
 
     // ===== الانتقال للصفحة السابقة =====
@@ -134,15 +143,17 @@
         if (isAnimating || currentPage <= 0) return;
         isAnimating = true;
 
+        scrollPagesToTop();
+
         // تأثير التقليب
         pageRight.classList.add('flipping-left');
         setTimeout(() => {
             pageRight.classList.remove('flipping-left');
+            isAnimating = false;
         }, 600);
 
         currentPage--;
-        renderPage(currentPage);
-        isAnimating = false;
+        renderPage(currentPage, true);
     }
 
     // ===== بناء الفهرس =====
@@ -161,7 +172,7 @@
             `;
             item.addEventListener('click', () => {
                 currentPage = i;
-                renderPage(currentPage);
+                renderPage(currentPage, true);
                 closeIndexPanel();
             });
             indexList.appendChild(item);
@@ -199,7 +210,7 @@
         setTimeout(() => {
             coverScreen.style.display = 'none';
             bookContainer.classList.remove('hidden');
-            renderPage(0);
+            renderPage(0, true);
         }, 800);
     }
 
@@ -225,9 +236,9 @@
     // ===== اختصارات لوحة المفاتيح =====
     document.addEventListener('keydown', (e) => {
         if (bookContainer.classList.contains('hidden')) return;
-        if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
             goNext(); // في RTL: السهم الأيسر = التالي
-        } else if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        } else if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
             goPrev();
         } else if (e.key === 'Escape') {
             closeIndexPanel();
@@ -268,7 +279,7 @@
 
     // عرض رسالة إذا لم توجد بيانات
     if (totalPages === 0) {
-        bookContainer.innerHTML = '<div style="color:var(--gold);text-align:center;padding:3rem;font-size:1.2rem;">⚠️ لم يتم تحميل بيانات الديناصورات. تأكد من وجود ملفات page*.js</div>';
+        bookContainer.innerHTML = '<div style="color:var(--gold);text-align:center;padding:3rem;font-size:1.2rem;">⚠️ لم يتم تحميل بيانات الديناصورات. تأكد من وجود ملفات page*.js في مجلد pages</div>';
     }
 
     console.log(`🦕 تم تحميل ${totalPages} ديناصور في الموسوعة`);

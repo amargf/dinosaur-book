@@ -642,6 +642,7 @@ body {
     display: flex;
     flex-direction: column;
     box-shadow: -10px 0 40px rgba(0, 0, 0, 0.7);
+    overflow: hidden;
 }
 
 .index-panel.open {
@@ -672,6 +673,7 @@ body {
     cursor: pointer;
     line-height: 1;
     transition: transform 0.3s ease;
+    padding: 0 0.5rem;
 }
 
 .close-btn:hover {
@@ -679,10 +681,12 @@ body {
 }
 
 .index-list {
-    flex: 1;
+    flex: 1 1 auto;
     overflow-y: auto;
+    overflow-x: hidden;
     padding: 1rem;
-    padding-bottom: calc(80px + env(safe-area-inset-bottom, 40px));
+    padding-bottom: 120px;
+    -webkit-overflow-scrolling: touch;
 }
 
 .index-list::-webkit-scrollbar {
@@ -856,11 +860,9 @@ body {
     .index-panel {
         width: 100vw;
         right: -100vw;
-        height: 100vh;
-        height: 100dvh;
     }
 
     .index-list {
-        padding-bottom: calc(100px + env(safe-area-inset-bottom, 50px));
+        padding-bottom: 150px;
     }
 }

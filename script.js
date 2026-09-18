@@ -9,7 +9,7 @@
     data.sort((a, b) => a.id - b.id);
 
     // المتغيرات العامة
-    let currentPage = 0; // فهرس الصفحة الحالية (0-based)
+    let currentPage = 0;
     let isAnimating = false;
     const totalPages = data.length;
 
@@ -75,11 +75,9 @@
         const dino = data[index];
         const content = buildPageContent(dino);
 
-        // عرض الصفحة اليمنى
         pageRightContent.innerHTML = content;
         pageRightNum.textContent = dino.id;
 
-        // الصفحة اليسرى (عرض الصفحة التالية)
         const nextIndex = index + 1;
         if (nextIndex < totalPages) {
             const nextDino = data[nextIndex];
@@ -97,18 +95,15 @@
             pageLeftNum.textContent = '';
         }
 
-        // تحديث مؤشر الصفحة
         currentPageEl.textContent = dino.id;
         totalPagesEl.textContent = totalPages;
 
-        // تحديث حالة الأزرار
         prevBtn.disabled = index === 0;
         nextBtn.disabled = index >= totalPages - 1;
 
-        // تحديث الفهرس النشط
         updateActiveIndexItem(index);
 
-        // ⚡ إجبار التمرير للأعلى بشكل متزامن وفوري
+        // ⚡ إجبار التمرير للأعلى
         pageRight.scrollTop = 0;
         pageLeft.scrollTop = 0;
         requestAnimationFrame(() => {
@@ -122,11 +117,9 @@
         if (isAnimating || currentPage >= totalPages - 1) return;
         isAnimating = true;
 
-        // 1. حدّث المحتوى أولاً (سيؤدي إلى التمرير للأعلى داخل renderPage)
         currentPage++;
         renderPage(currentPage);
 
-        // 2. طبّق تأثير التقليب بعد تحديث المحتوى
         pageRight.classList.add('flipping-right');
         setTimeout(() => {
             pageRight.classList.remove('flipping-right');
@@ -215,7 +208,6 @@
     indexBtn.addEventListener('click', openIndexPanel);
     closeIndex.addEventListener('click', closeIndexPanel);
 
-    // إغلاق الفهرس عند الضغط خارج الصفحة
     document.addEventListener('click', (e) => {
         if (indexPanel.classList.contains('open') &&
             !indexPanel.contains(e.target) &&

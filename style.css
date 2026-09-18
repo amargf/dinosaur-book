@@ -1,39 +1,10 @@
-/* --- الإعدادات الأساسية --- */
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
-body {
-    font-family: 'Amiri', serif, sans-serif;
-    background-color: #121814;
-    color: #e3dec3;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    overflow-x: hidden;
-}
-
-/* --- حاوية الكتاب والصفحات ---. */
-.book-container, .main-container {
-    width: 100%;
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 15px;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-}
-
-/* حاوية المحتوى الداخلية لمنع التداخل ودعم التمرير السلس */
 .content-container, .book-content, .page-content {
     width: 100%;
     position: relative;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    padding: 10px;
-    line-height: 1.8;
+    overflow-y: visible;
+    height: auto;
+    padding: 15px;
+    box-sizing: border-box;
 }
 
 .page-inner-content {
@@ -41,44 +12,13 @@ body {
     word-wrap: break-word;
 }
 
-/* --- تنسيق العناوين --- */
-.dino-title {
-    font-size: 28px;
-    color: #f3e5ab;
-    margin-bottom: 5px;
-    text-align: center;
-}
-
-.dino-subtitle {
-    font-size: 18px;
-    color: #bfa15f;
-    margin-bottom: 15px;
-    text-align: center;
-    font-style: italic;
-}
-
-.dino-desc {
-    font-size: 16px;
-    margin-bottom: 20px;
-    text-align: justify;
-    line-height: 1.8;
-}
-
-/* --- العناوين الفرعية (مثل التسمية والحجم) --- */
 .section-title {
-    font-size: 18px;
+    margin-top: 20px;
+    margin-bottom: 8px;
     font-weight: bold;
     color: #d4af37;
-    margin-top: 25px;
-    margin-bottom: 10px;
     border-bottom: 1px solid rgba(212, 175, 55, 0.3);
-    padding-bottom: 5px;
-}
-
-/* --- القوائم والنصوص --- */
-p {
-    margin-bottom: 12px;
-    line-height: 1.7;
+    padding-bottom: 4px;
 }
 
 .info-list {
@@ -87,29 +27,6 @@ p {
 }
 
 .info-list li {
-    margin-bottom: 8px;
+    margin-bottom: 6px;
     line-height: 1.6;
-}
-
-/* --- تذكرة أو رقم الصفحة في الأسفل --- */
-.page-number-footer {
-    text-align: center;
-    margin-top: 30px;
-    font-size: 14px;
-    color: #bfa15f;
-    opacity: 0.8;
-}
-
-/* --- شريط التمرير (Scrollbar) المخصص للهاتف --- */
-::-webkit-scrollbar {
-    width: 5px;
-}
-
-::-webkit-scrollbar-track {
-    background: rgba(0, 0, 0, 0.1);
-}
-
-::-webkit-scrollbar-thumb {
-    background: #d4af37;
-    border-radius: 10px;
 }

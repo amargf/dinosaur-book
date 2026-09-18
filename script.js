@@ -1,5 +1,5 @@
-// بيانات أساسية لضمان عدم ظهور الشاشة فارغة أبداً مع دعم الملفات الخارجية
-const defaultDinosaursData = [
+// قاعدة بيانات احتياطية أساسية لضمان عمل الموسوعة فوراً دون شاشات فارغة
+const fallbackData = [
     {
         id: 1,
         nameAr: "أبيليصور",
@@ -48,23 +48,24 @@ window.pagesData = window.pagesData || [];
 document.addEventListener("DOMContentLoaded", async () => {
     const totalPages = 27;
 
-    // محاولة جلب الملفات الخارجية دون تعطل الصفحة لو فشلت
+    // دالة آمنة لتحميل الملفات الخارجية
     function loadScript(src) {
         return new Promise((resolve) => {
             const script = document.createElement('script');
             script.src = src;
             script.onload = resolve;
-            script.onerror = () => resolve();
+            script.onerror = () => resolve(); // المتابعة بصمت لو فشل ملف معين
             document.head.appendChild(script);
         });
     }
 
+    // محاولة تحميل ملفات الصفحات
     for (let i = 1; i <= totalPages; i++) {
         await loadScript(`pages/page${i}.js`);
     }
 
-    // دمج البيانات الافتراضية مع البيانات المحملة
-    defaultDinosaursData.forEach(item => {
+    // دمج البيانات الاحتياطية مع البيانات المحملة لضمان عدم وجود صفحة فارغة
+    fallbackData.forEach(item => {
         if (!window.pagesData.some(p => p.id === item.id)) {
             window.pagesData.push(item);
         }
@@ -72,15 +73,18 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     let currentPage = 1;
 
-    const prevBtn = document.getElementById('prev-btn') || document.querySelector('.prev-btn');
-    const nextBtn = document.getElementById('next-btn') || document.querySelector('.next-btn');
+    // البحث عن أزرار التنقل والحاوية بأكثر من احتمال لتجنب الخطأ
+    const prevBtn = document.getElementById('prev-btn') || document.querySelector('.prev-btn') || document.querySelectorAll('button')[0];
+    const nextBtn = document.getElementById('next-btn') || document.querySelector('.next-btn') || document.querySelectorAll('button')[1];
     const pageIndicator = document.getElementById('page-indicator') || document.querySelector('.page-indicator');
     
     let contentContainer = document.getElementById('content-container') || 
                            document.querySelector('.content-container') || 
                            document.querySelector('.book-content') ||
-                           document.querySelector('.page-content');
+                           document.querySelector('.page-content') ||
+                           document.querySelector('.main-content');
 
+    // إذا لم تُوجد حاوية محتوى، نقوم بتنبيئها برمجياً لضمان ظهور النصوص
     if (!contentContainer) {
         contentContainer = document.createElement('div');
         contentContainer.className = 'content-container';
@@ -97,8 +101,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (pageData) {
             contentContainer.innerHTML = `
                 <div class="page-inner-content">
-                    <h1 class="dino-title" style="text-align: center;">${pageData.nameAr || ''}</h1>
-                    <h2 class="dino-subtitle" style="text-align: center; margin-bottom: 15px;">${pageData.nameEn || ''}</h2>
+                    <h1 class="dino-title">${pageData.nameAr || ''}</h1>
+                    <h2 class="dino-subtitle">${pageData.nameEn || ''}</h2>
                     <p class="dino-desc">${pageData.desc || ''}</p>
                     
                     <div class="section-title">المعنى والتسمية</div>
@@ -111,13 +115,14 @@ document.addEventListener("DOMContentLoaded", async () => {
                     </ul>
                     
                     ${pageData.details || ''}
+                    <div class="page-number-footer">صفحة ${pageData.id} من ${totalPages}</div>
                 </div>
             `;
         } else {
             contentContainer.innerHTML = `
-                <div class="page-inner-content" style="text-align: center; padding: 40px;">
+                <div class="page-inner-content" style="text-align: center; padding: 30px;">
                     <h2 style="color: #d4af37;">الصفحة رقم ${pageNum}</h2>
-                    <p>جاري تحميل محتوى هذه الصفحة...</p>
+                    <p>جاري تحضير معلومات هذا الديناصور...</p>
                 </div>
             `;
         }

@@ -245,13 +245,16 @@
         const diffX = touchEndX - touchStartX;
         const diffY = touchEndY - touchStartY;
 
+        // تجاهل السحب العمودي
         if (Math.abs(diffY) > Math.abs(diffX)) return;
 
         if (Math.abs(diffX) > 60) {
             if (diffX > 0) {
-                goPrev();
-            } else {
+                // سحب لليمين = التالي (مثل تقليب صفحة لليمين في RTL)
                 goNext();
+            } else {
+                // سحب لليسار = السابق
+                goPrev();
             }
         }
     }, { passive: true });

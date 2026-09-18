@@ -68,24 +68,18 @@
         `;
     }
 
-    // ===== تمرير الصفحة للأعلى فوراً =====
-    function scrollPagesToTop() {
-        if (pageRight) pageRight.scrollTop = 0;
-        if (pageLeft) pageLeft.scrollTop = 0;
-    }
-
     // ===== عرض صفحة معينة =====
-    function renderPage(index, scrollTop = true) {
+    function renderPage(index) {
         if (index < 0 || index >= totalPages) return;
 
         const dino = data[index];
         const content = buildPageContent(dino);
 
-        // عرض الصفحة اليمنى دائماً
+        // عرض الصفحة اليمنى
         pageRightContent.innerHTML = content;
         pageRightNum.textContent = dino.id;
 
-        // الصفحة اليسرى (للديسكتوب فقط - عرض الصفحة التالية إن وجدت)
+        // الصفحة اليسرى (عرض الصفحة التالية)
         const nextIndex = index + 1;
         if (nextIndex < totalPages) {
             const nextDino = data[nextIndex];
@@ -114,10 +108,13 @@
         // تحديث الفهرس النشط
         updateActiveIndexItem(index);
 
-        // تمرير لأعلى الصفحة فوراً
-        if (scrollTop) {
-            scrollPagesToTop();
-        }
+        // ⚡ إجبار التمرير للأعلى بشكل متزامن وفوري
+        pageRight.scrollTop = 0;
+        pageLeft.scrollTop = 0;
+        requestAnimationFrame(() => {
+            pageRight.scrollTop = 0;
+            pageLeft.scrollTop = 0;
+        });
     }
 
     // ===== الانتقال للصفحة التالية =====
@@ -125,17 +122,16 @@
         if (isAnimating || currentPage >= totalPages - 1) return;
         isAnimating = true;
 
-        scrollPagesToTop();
+        // 1. حدّث المحتوى أولاً (سيؤدي إلى التمرير للأعلى داخل renderPage)
+        currentPage++;
+        renderPage(currentPage);
 
-        // تأثير التقليب
+        // 2. طبّق تأثير التقليب بعد تحديث المحتوى
         pageRight.classList.add('flipping-right');
         setTimeout(() => {
             pageRight.classList.remove('flipping-right');
             isAnimating = false;
         }, 600);
-
-        currentPage++;
-        renderPage(currentPage, true);
     }
 
     // ===== الانتقال للصفحة السابقة =====
@@ -143,17 +139,14 @@
         if (isAnimating || currentPage <= 0) return;
         isAnimating = true;
 
-        scrollPagesToTop();
+        currentPage--;
+        renderPage(currentPage);
 
-        // تأثير التقليب
         pageRight.classList.add('flipping-left');
         setTimeout(() => {
             pageRight.classList.remove('flipping-left');
             isAnimating = false;
         }, 600);
-
-        currentPage--;
-        renderPage(currentPage, true);
     }
 
     // ===== بناء الفهرس =====
@@ -172,7 +165,7 @@
             `;
             item.addEventListener('click', () => {
                 currentPage = i;
-                renderPage(currentPage, true);
+                renderPage(currentPage);
                 closeIndexPanel();
             });
             indexList.appendChild(item);
@@ -185,7 +178,6 @@
         items.forEach((item, i) => {
             item.classList.toggle('active', i === index);
         });
-        // تمرير العنصر النشط إلى مجال الرؤية
         if (items[index]) {
             items[index].scrollIntoView({ block: 'nearest', behavior: 'smooth' });
         }
@@ -210,7 +202,7 @@
         setTimeout(() => {
             coverScreen.style.display = 'none';
             bookContainer.classList.remove('hidden');
-            renderPage(0, true);
+            renderPage(0);
         }, 800);
     }
 
@@ -237,7 +229,7 @@
     document.addEventListener('keydown', (e) => {
         if (bookContainer.classList.contains('hidden')) return;
         if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
-            goNext(); // في RTL: السهم الأيسر = التالي
+            goNext();
         } else if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
             goPrev();
         } else if (e.key === 'Escape') {
@@ -261,14 +253,13 @@
         const diffX = touchEndX - touchStartX;
         const diffY = touchEndY - touchStartY;
 
-        // تجاهل السحب العمودي
         if (Math.abs(diffY) > Math.abs(diffX)) return;
 
         if (Math.abs(diffX) > 60) {
             if (diffX > 0) {
-                goPrev(); // سحب لليمين = السابق (في RTL)
+                goPrev();
             } else {
-                goNext(); // سحب لليسار = التالي
+                goNext();
             }
         }
     }, { passive: true });
@@ -277,7 +268,6 @@
     buildIndex();
     totalPagesEl.textContent = totalPages;
 
-    // عرض رسالة إذا لم توجد بيانات
     if (totalPages === 0) {
         bookContainer.innerHTML = '<div style="color:var(--gold);text-align:center;padding:3rem;font-size:1.2rem;">⚠️ لم يتم تحميل بيانات الديناصورات. تأكد من وجود ملفات page*.js في مجلد pages</div>';
     }

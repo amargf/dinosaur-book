@@ -2,39 +2,108 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>كتاب الديناصورات التفاعلي</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>موسوعة الديناصورات | Dinosaur Encyclopedia</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
-
-    <div class="book-container" id="book">
-        <!-- الغلاف الرئيسي (صفحة 0) -->
-        <div class="page cover-page" id="page-0">
-            <div class="cover-border">
-                <div class="badge">موسوعة ما قبل التاريخ</div>
-                <div class="title-box">
-                    <h1 class="title">معلومات عن<br>الديناصورات</h1>
-                    <div class="subtitle">دليل شامل لأعظم كائنات الأرض القديمة</div>
-                </div>
-                <div class="divider"></div>
-                <div class="icon-container">
-                    <span class="dino-icon">🦖</span>
-                </div>
-                <div class="divider"></div>
-                <div class="note">طبعة خاصة وشاملة</div>
-            </div>
+    <!-- شاشة البداية / الغلاف -->
+    <div id="cover-screen" class="cover-screen">
+        <div class="cover-bg"></div>
+        <div class="cover-content">
+            <div class="cover-ornament top">✦ ✦ ✦</div>
+            <div class="dino-icon">🦖</div>
+            <h1 class="cover-title">موسوعة الديناصورات</h1>
+            <p class="cover-subtitle">Dinosaur Encyclopedia</p>
+            <div class="cover-divider"></div>
+            <p class="cover-desc">رحلة عبر العصور الجيولوجية لاكتشاف عمالقة ما قبل التاريخ</p>
+            <button id="start-btn" class="start-btn">
+                <span>افتح الكتاب</span>
+                <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+            </button>
+            <div class="cover-ornament bottom">✦ ✦ ✦</div>
         </div>
     </div>
 
-    <!-- أزرار التحكم -->
-    <div class="controls">
-        <button class="btn" id="prevBtn" onclick="prevPage()" disabled>السابقة</button>
-        <span id="indicator" style="color: #fff; font-weight: bold;">1 / 1</span>
-        <button class="btn" id="nextBtn" onclick="nextPage()">التالية</button>
+    <!-- الكتاب -->
+    <div id="book-container" class="book-container hidden">
+        <div class="book">
+            <!-- الصفحة اليمنى -->
+            <div class="page page-right" id="page-right">
+                <div class="page-content" id="page-right-content"></div>
+                <div class="page-number" id="page-right-num"></div>
+            </div>
+            <!-- الصفحة اليسرى -->
+            <div class="page page-left" id="page-left">
+                <div class="page-content" id="page-left-content"></div>
+                <div class="page-number" id="page-left-num"></div>
+            </div>
+            <!-- غلاف الكتاب الخلفي / الكعب -->
+            <div class="book-spine"></div>
+        </div>
+
+        <!-- أزرار التنقل -->
+        <div class="nav-controls">
+            <button id="prev-btn" class="nav-btn" disabled>
+                <svg viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+                <span>السابق</span>
+            </button>
+            <div class="page-indicator">
+                <span id="current-page">1</span>
+                <span class="sep">/</span>
+                <span id="total-pages">27</span>
+            </div>
+            <button id="next-btn" class="nav-btn">
+                <span>التالي</span>
+                <svg viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+            </button>
+        </div>
+
+        <!-- فهرس سريع -->
+        <button id="index-btn" class="index-btn" title="الفهرس">
+            <svg viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" d="M3 9h14V7H3v2zm0 4h14v-2H3v2zm0 4h14v-2H3v2zm16 0h2v-2h-2v2zm0-10v2h2V7h-2zm0 6h2v-2h-2v2zM3 5h14V3H3v2z"/></svg>
+        </button>
+
+        <!-- قائمة الفهرس -->
+        <div id="index-panel" class="index-panel">
+            <div class="index-header">
+                <h2>فهرس الديناصورات</h2>
+                <button id="close-index" class="close-btn">&times;</button>
+            </div>
+            <div class="index-list" id="index-list"></div>
+        </div>
     </div>
 
-    <!-- السكربت الرئيسي الذي يقرأ الصفحات تلقائياً -->
+    <!-- تحميل ملفات البيانات من مجلد pages -->
+<script src="pages/page1.js"></script>
+<script src="pages/page2.js"></script>
+<script src="pages/page3.js"></script>
+<script src="pages/page4.js"></script>
+<script src="pages/page5.js"></script>
+<script src="pages/page6.js"></script>
+<script src="pages/page7.js"></script>
+<script src="pages/page8.js"></script>
+<script src="pages/page9.js"></script>
+<script src="pages/page10.js"></script>
+<script src="pages/page11.js"></script>
+<script src="pages/page12.js"></script>
+<script src="pages/page13.js"></script>
+<script src="pages/page14.js"></script>
+<script src="pages/page15.js"></script>
+<script src="pages/page16.js"></script>
+<script src="pages/page17.js"></script>
+<script src="pages/page18.js"></script>
+<script src="pages/page19.js"></script>
+<script src="pages/page20.js"></script>
+<script src="pages/page21.js"></script>
+<script src="pages/page22.js"></script>
+<script src="pages/page23.js"></script>
+<script src="pages/page24.js"></script>
+<script src="pages/page25.js"></script>
+<script src="pages/page26.js"></script>
+<script src="pages/page27.js"></script>
+
     <script src="script.js"></script>
 </body>
 </html>

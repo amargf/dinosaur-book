@@ -1,65 +1,115 @@
-/* --- الإعدادات العامة --- */
-body {
+/* --- الإعدادات الأساسية --- */
+* {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
+}
+
+body {
     font-family: 'Amiri', serif, sans-serif;
     background-color: #121814;
     color: #e3dec3;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    overflow-x: hidden;
 }
 
-/* --- إصلاح جذر مشكلة التداخل والتمرير --- */
-.page-content, .card-content, .content-container, .book-page, .page, .card {
-    position: relative !important;
-    height: auto !important;
-    min-height: 100% !important;
-    max-height: none !important;
-    overflow: visible !important;
-    box-sizing: border-box;
-    padding: 20px;
+/* --- حاوية الكتاب والصفحات ---. */
+.book-container, .main-container {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 15px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
 }
 
-/* السماح للصفحة الرئيسية أو الحاوية الكبرى بالتمرير النظيف والشامل */
-html, body, .book-container, .main-container {
-    height: auto !important;
-    overflow-y: auto !important;
+/* حاوية المحتوى الداخلية لمنع التداخل ودعم التمرير السلس */
+.content-container, .book-content, .page-content {
+    width: 100%;
+    position: relative;
+    overflow-y: auto;
     -webkit-overflow-scrolling: touch;
+    padding: 10px;
+    line-height: 1.8;
 }
 
-/* --- تنسيق العناوين والنصوص لمنع التصاقها --- */
-h1, h2, h3 {
-    margin-top: 15px;
-    margin-bottom: 10px;
-    line-height: 1.4;
+.page-inner-content {
+    width: 100%;
+    word-wrap: break-word;
 }
 
+/* --- تنسيق العناوين --- */
+.dino-title {
+    font-size: 28px;
+    color: #f3e5ab;
+    margin-bottom: 5px;
+    text-align: center;
+}
+
+.dino-subtitle {
+    font-size: 18px;
+    color: #bfa15f;
+    margin-bottom: 15px;
+    text-align: center;
+    font-style: italic;
+}
+
+.dino-desc {
+    font-size: 16px;
+    margin-bottom: 20px;
+    text-align: justify;
+    line-height: 1.8;
+}
+
+/* --- العناوين الفرعية (مثل التسمية والحجم) --- */
 .section-title {
-    display: block !important;
-    position: relative !important;
-    margin-top: 25px !important;
-    margin-bottom: 10px !important;
+    font-size: 18px;
     font-weight: bold;
     color: #d4af37;
+    margin-top: 25px;
+    margin-bottom: 10px;
     border-bottom: 1px solid rgba(212, 175, 55, 0.3);
     padding-bottom: 5px;
-    clear: both;
 }
 
-/* --- تنسيق القوائم والنصوص --- */
+/* --- القوائم والنصوص --- */
+p {
+    margin-bottom: 12px;
+    line-height: 1.7;
+}
+
 .info-list {
-    position: relative !important;
-    margin: 10px 0 15px 0 !important;
-    padding-right: 20px;
+    margin: 10px 0 15px 20px;
     list-style-type: disc;
-    clear: both;
 }
 
 .info-list li {
     margin-bottom: 8px;
-    line-height: 1.7;
+    line-height: 1.6;
 }
 
-p {
-    line-height: 1.7;
-    margin-bottom: 10px;
+/* --- تذكرة أو رقم الصفحة في الأسفل --- */
+.page-number-footer {
+    text-align: center;
+    margin-top: 30px;
+    font-size: 14px;
+    color: #bfa15f;
+    opacity: 0.8;
+}
+
+/* --- شريط التمرير (Scrollbar) المخصص للهاتف --- */
+::-webkit-scrollbar {
+    width: 5px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+::-webkit-scrollbar-thumb {
+    background: #d4af37;
+    border-radius: 10px;
 }
